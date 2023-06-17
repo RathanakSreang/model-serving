@@ -4,7 +4,6 @@
 onnx model for dog and cat classification
 """
 
-import onnxruntime as ort
 import numpy as np
 
 from PIL import Image
@@ -32,7 +31,7 @@ def load_image(filename: str):
     return np_array
 
 
-def cat_dog_prediction(files):
+def cat_dog_prediction(model_sess, files):
     """
     Prediction function
     """
@@ -40,17 +39,13 @@ def cat_dog_prediction(files):
     # image_path = "./images/dog.jpeg"
     # image_path = "./images/cat.jpg"
     image_path = files["image"]
-    model_path = "./models/dogcat_model_bak.onnx"
-
-    # Step 1: Load onnx model
-    ort_sess = ort.InferenceSession(model_path)
 
     # Step 2: Load image
     image = load_image(image_path)
 
     # Step 3: Make a prediction
-    input_name = ort_sess.get_inputs()[0].name
-    result = ort_sess.run(input_feed={input_name: list(image)}, output_names=None)[0]
+    input_name = model_sess.get_inputs()[0].name
+    result = model_sess.run(input_feed={input_name: list(image)}, output_names=None)[0]
 
     # Step 4: Check the result with threshold 0.5
     threshold = 0.5

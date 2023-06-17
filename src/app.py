@@ -1,7 +1,12 @@
 from flask import Flask, jsonify, request
+import onnxruntime as ort
+
 from src.libs.cat_or_dog import cat_dog_prediction
 
+
 def create_app(config=None):
+    model_path = "./models/dogcat_model_bak.onnx"
+    ort_sess = ort.InferenceSession(model_path)
     model_app = Flask(__name__, instance_relative_config=True)
     if config is None:
         # load the instance config, if it exists and config not pass
@@ -23,7 +28,7 @@ def create_app(config=None):
             Json string.
         """
         # try:
-        pred = cat_dog_prediction(request.files)
+        pred = cat_dog_prediction(ort_sess, request.files)
         return jsonify({"success": True, "result": pred}), 201
 
         # except Exception as err:
