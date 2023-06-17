@@ -5,3 +5,5 @@ flake8==3.9.2
 onnxruntime==1.12.1
 Pillow==9.2.0 
 numpy==1.23.0 
+onnxmltools==1.11.2
+# tensorflow==2.12.0

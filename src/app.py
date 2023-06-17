@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from src.libs.cat_or_dog import cat_dog_prediction
 
 def create_app(config=None):
     model_app = Flask(__name__, instance_relative_config=True)
@@ -13,7 +14,22 @@ def create_app(config=None):
     def welcome():
         return jsonify("Welcome to Model serving service"), 200
 
-    #TODO: implement endpoint here.
+    @model_app.route("/cat-or-dog", methods=["POST", "OPTIONS"])
+    def cat_or_dog():
+        """Detect if image is cat or dog.
+
+        Returns
+        -------
+            Json string.
+        """
+        # try:
+        pred = cat_dog_prediction(request.files)
+        return jsonify({"success": True, "result": pred}), 201
+
+        # except Exception as err:
+            # return jsonify({"success": False "msg": "Invalid data"}), 400
+
+
     
     return model_app
 
