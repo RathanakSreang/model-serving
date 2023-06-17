@@ -18,3 +18,15 @@ def client(app):
 def test_welcome(client) -> None:
     response = client.get("/")
     assert response.json == "Welcome to Model serving service"
+
+def test_cat_or_dog_1(client) -> None:
+    file = "./images/cat.jpg"
+    data = {"image": (open(file, "rb"), file)}
+    response = client.post("/cat-or-dog", data=data)
+    assert response.json["result"] == "cat"
+
+def test_cat_or_dog_2(client) -> None:
+    file = "./images/dog.jpeg"
+    data = {"image": (open(file, "rb"), file)}
+    response = client.post("/cat-or-dog", data=data)
+    assert response.json["result"] == "dog"
